@@ -3,5 +3,6 @@
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
 </a>
-{%widget name="widget/nav/nav.tpl"%}
-{%script%} require('widget/sidebar/sidebar.js'); {%/script%}
+{% widget "nav" %}
+{% require "./sidebar.css" %}
+{% require "./sidebar.js" %}
