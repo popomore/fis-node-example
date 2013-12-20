@@ -4,5 +4,8 @@
     <span class="icon-bar"></span>
 </a>
 {% widget "nav" %}
-{% require "./sidebar.css" %}
-{% require "./sidebar.js" %}
+{% require "widget/sidebar/sidebar.css" %}
+{% require "widget/sidebar/sidebar.js" %}
+{% script %}
+  require('widget/sidebar/sidebar.js');
+{% endscript %}

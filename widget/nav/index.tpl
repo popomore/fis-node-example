@@ -9,5 +9,5 @@
         {% endfor %}
     </ul>
 </nav>
-{% require "./nav.css" %}
-{% require "./nav.js" %}
+{% require "widget/nav/nav.css" %}
+{% require "widget/nav/nav.js" %}

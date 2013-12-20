@@ -27,18 +27,27 @@ fis.config.merge({
             release: '/template/$1'
         }, {
             reg: /^\/(docs\/.*\.md)/i,
-            release: '/template/$1'
+            release: '/template/page/$1'
         }, {
-            reg: /^\/((?:widget|page|lib)\/.*\.js)/i,
+            reg: /^\/((?:widget|page)\/.*\.js)/i,
+            url: '/$1',
             isMod: true,
             release: '/static/$1'
         }, {
+            reg: /^\/(lib\/.*\.js)/i,
+            url: '/$1',
+            release: '/static/$1'
+        }, {
             reg: /^\/((?:widget|page|lib)\/.*\.css)/i,
+            url: '/$1',
             release: '/static/$1'
         }, {
             reg: /^\/(.*\.(?:png|jpg|gif|jpeg))$/,
-            url: '$1',
+            url: '/$1',
             release: '/static/$1'
+        }, {
+            reg: /static\/(pkg\/.*)/i,
+            url: '$1'
         }, {
             reg: /^\/([^\/]*\.js)$/,
             useCompile: false,
@@ -58,17 +67,19 @@ fis.config.merge({
         }
     },
     pack: {
-        'pkg/aio.js': [
+        'static/pkg/aio.js': [
             'lib/js/mod.js',
-            'lib/js/**.js',
-            '**.js'
+            'lib/**.js',
+            'widget/**.js',
+            'page/**.js'
         ],
-        'pkg/aio.css': [
+        'static/pkg/aio.css': [
             'lib/css/bootstrap.css',
             'lib/css/bootstrap-responsive.css',
             'lib/css/style.css',
-            'lib/css/**.css',
-            '**.css'
+            'lib/**.css',
+            'widget/**.css',
+            'page/**.css'
         ]
     },
     deploy: {

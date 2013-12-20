@@ -6,4 +6,4 @@
     </div>
     <img src="macbook.png"/>
 </section>
-{% require "./slogan.css" %}
+{% require "widget/slogan/slogan.css" %}

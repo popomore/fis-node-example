@@ -1,6 +1,7 @@
 var path = require('path');
 var con = require('consolidate');
 var nunjucks = require('nunjucks');
+var Resource = require('./resource');
 
 module.exports = function(app) {
   var env = nunjucks.configure([
@@ -17,7 +18,31 @@ module.exports = function(app) {
   app.engine('tpl', con.nunjucks);
   app.set('view engine', 'tpl');
   app.set('views', path.join(__dirname, 'template/page'));
+
+  var render = app.render;
+  app.render = function(name, options, fn) {
+    render.call(app, name, options, function(err, value) {
+      if (value && value.indexOf('<html>') > -1) {
+        var css = resource.getCss();
+        var js = resource.getJs();
+        value = value
+          .replace(/(<\/head)/g, css + '$1')
+          .replace(/(<\/body)/g, js + '$1');
+      }
+      fn(err, value);
+    })
+  };
   
+  var map, resource;
+  try {
+    map = require(__dirname + '/config/map.json');
+  } catch(e) {
+    console.log('map.json not exists');
+  }
+  if (map) {
+    resource = new Resource(map, {pkg: true});
+  }
+
   function Head() {
     this.tags = ['head'];
 
@@ -30,7 +55,7 @@ module.exports = function(app) {
   
     this.run = function(context, headFunc, callback) {
       headFunc(function(err, value) {
-        console.log(err);
+        console.log('head');
         env.renderString(value, context, callback);
       });
     };
@@ -48,7 +73,7 @@ module.exports = function(app) {
   
     this.run = function(context, bodyFunc, callback) {
       bodyFunc(function(err, value) {
-        console.log(err);
+        console.log('body');
         env.renderString(value, context, callback);
       });
     };
@@ -66,8 +91,9 @@ module.exports = function(app) {
   
     this.run = function(context, scriptFunc, callback) {
       scriptFunc(function(err, value) {
-        console.log(err);
-        callback(null, '<script>' + value + '</script>');
+        console.log('script');
+        resource.inline(value, 'script');
+        callback(null, '');
       });
     };
   }
@@ -84,8 +110,9 @@ module.exports = function(app) {
   
     this.run = function(context, styleFunc, callback) {
       styleFunc(function(err, value) {
-        console.log(err);
-        callback(null, '<style>' + value + '</style>');
+        console.log('style');
+        resource.inline(value, 'style');
+        callback(null, '');
       });
     };
   }
@@ -101,13 +128,9 @@ module.exports = function(app) {
     };
   
     this.run = function(context, path, callback) {
-      console.log(path);
-      if (/\.js$/.test(path)) {
-        path = '<script src="' + path + '"></script>';
-      } else if (/\.css$/.test(path)) {
-        path = '<link href="' + path + '" rel="stylesheet" type="text/css" />';
-      }
-      callback(null, path);
+      path = resource.resolve(path, context.ctx.filename.replace(__dirname, ''));
+      resource.require(path);
+      callback(null, '');
     };
   }
 
@@ -122,6 +145,7 @@ module.exports = function(app) {
     };
   
     this.run = function(context, path, param) {
+      console.log('widget ', path);
       var callback, ctx = context.ctx;
       if (arguments.length === 4) {
         callback = arguments[3];
