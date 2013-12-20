@@ -1,14 +1,14 @@
 {
-  "name": "application-name",
+  "name": "fis-site",
   "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
   "dependencies": {
     "express": "3.3.5",
     "consolidate": "*",
     "nunjucks": "git://github.com/jlongster/nunjucks.git",
     "jade": "*"
+  },
+  "devDependencies": {
+    "fis": "*",
+    "fis-parser-marked": "*"
   }
 }
