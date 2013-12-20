@@ -1,5 +1,5 @@
 {
-  "name": "fis-site",
+  "name": "fis-node-example",
   "version": "0.0.1",
   "dependencies": {
     "express": "3.3.5",

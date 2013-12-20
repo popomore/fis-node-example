@@ -1,23 +1,35 @@
-fis-site
+# fis-node-example
+
 ========
 
-fis official site
+这个项目 fork 自 [lily-zhangying/fis-site](https://github.com/lily-zhangying/fis-site)，尝试使用 node 实现这个方案。
+
+这个例子使用 express + nunjucks + fis
+
+## 安装
+
+首先要安装 fis
 
 ```
-{% require "./sidebar.js" inline %}
+$ npm install fis -g
+$ npm install fis-parser-marked -g
 ```
 
-```
-// sidebar.js
+安装项目依赖
 
-context
-require
-module
-exports
+```
+$ cd fis-node-example
+$ npm install
 ```
 
+启动
 
+```
+$ make deploy
+```
 
-{% script %}
-eee
-{% endscript %}
+## 说明
+
+代码比较乱，只是做一个实验，里面有很多坑，有心的同学可以研究下。
+
+如果不想看到合并的文件，实例化 Resource 的时候可以把 pkg 设成 false。
